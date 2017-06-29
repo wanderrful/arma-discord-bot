@@ -47,7 +47,7 @@ Bot.registry.registerCommandsIn( Path.join(__dirname, "commands") );
 
 
 //*** Login to Discord and begin running the bot
-Bot.login("Mjk2OTMzMTUzMDE5Mzk2MDk3.C75hLg.CtRd87FwV8tZZ8Jytu5T5VtpPAg");
+Bot.login("");
 
 
 
