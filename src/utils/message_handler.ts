@@ -1,6 +1,8 @@
 import Discord = require("discord.js");
-import * as Commands from "./command";
 
+import ArmaBot from "../arma_bot";
+import * as Commands from "./command";
+import * as MissionModule from "./mission";
 
 
 let CommandPrefix: string = "~";
@@ -21,27 +23,37 @@ export default function HandleMessage (a_Message: Discord.Message): void {
             args: GivenInput.splice(1)
         };
 
+        let BotReference = a_Message.client as ArmaBot;
+
         //*** COMMAND PARSING AND HANDLING
         switch (GivenCommand.cmd) {
             //case (CommandPrefix + ""): { break; }
 
             //*** MISSION COMMANDS
-            case ("cm"): { //create mission
+            case ("cm"): { //create mission:        eventId missionName
                 a_Message.channel.sendMessage( "*** Command \'Create Mission\' called!  args: " + GivenCommand.args );
+                BotReference.createMission({
+                    eventId: (BotReference.MissionList.length + 1),
+                    givenData: {
+                        missionId: (BotReference.MissionList.length + 1),
+                        missionName: GivenCommand.args[1]
+                    },
+                    givenGroups: []
+                });
                 break;
             }
 
-            case ("md"): { //delete mission
+            case ("dm"): { //delete mission:        eventId missionId?
                 a_Message.channel.sendMessage( "*** Command \'Delete Mission\' called!  args: " + GivenCommand.args );
                 break;
             }
 
-            case ("as"): { //add slot
+            case ("mas"): { //add slot:              eventId missionId GroupName SlotName
                 a_Message.channel.sendMessage( "*** Command \'Add Slot\' called!  args: " + GivenCommand.args );
                 break;
             }
 
-            case ("ds"): { //delete slot
+            case ("mds"): { //delete slot           eventId missionId GroupName SlotName
                 a_Message.channel.sendMessage( "*** Command \'Delete Slot\' called!  args: " + GivenCommand.args );
                 break;
             }

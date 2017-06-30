@@ -1,34 +1,11 @@
 import * as Discord from "discord.js";
-import * as MissionLibrary from "./utils/mission";
-import * as MessageHandler from "./utils/message_handler";
+
+import ArmaBot from "./arma_bot";
 
 
 
 //*** Initialize the bot itself
-const Bot = new Discord.Client({
-  messageCacheLifetime: 600
-});
-
-
-
-//*** Register event handlers
-Bot.on('error', console.error);
-Bot.on('warn', console.warn);
-Bot.on('debug', console.log);
-Bot.on('disconnect', () => { console.warn('*** Disconnected!'); });
-Bot.on('reconnecting', () => { console.warn('*** Reconnecting...'); });
-
-Bot.on('ready', () => {
-  console.log(`Client ready; logged in as ${Bot.user.username}#${Bot.user.discriminator} (${Bot.user.id})`);
-});
-
-Bot.on("message", (message) => {
-  MessageHandler.HandleMessage(message);
-});
-
-
-
-//*** Register the commands that this bot should recognize
+let Bot = new ArmaBot();
 
 
 
