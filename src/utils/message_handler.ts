@@ -1,11 +1,17 @@
+//TODO: consider migrating this to arma_bot.ts as one giant monster file where everything is self-contained in the class definition?
 import Discord = require("discord.js");
 
 import ArmaBot from "../arma_bot";
-import * as Commands from "./command";
 import * as MissionModule from "./mission";
 
 
-let CommandPrefix: string = "~";
+
+let CommandPrefix: string = ArmaBot.CommandPrefix;
+
+export interface Command {
+    cmd: string,
+    args: Array<string>
+}
 
 
 
@@ -18,7 +24,7 @@ export default function HandleMessage (a_Message: Discord.Message): void {
         //parse the message for commands
         let GivenInput = a_Message.content.split(" ");
 
-        let GivenCommand: Commands.Command = {
+        let GivenCommand: Command = {
             cmd: GivenInput.shift().substr(1),
             args: GivenInput.splice(1)
         };
@@ -32,19 +38,26 @@ export default function HandleMessage (a_Message: Discord.Message): void {
             //*** MISSION COMMANDS
             case ("cm"): { //create mission:        eventId missionName
                 a_Message.channel.sendMessage( "*** Command \'Create Mission\' called!  args: " + GivenCommand.args );
-                BotReference.createMission({
-                    eventId: (BotReference.MissionList.length + 1),
+
+                BotReference.fn_createMission({
+                    eventId: Number(GivenCommand.args[0]),
                     givenData: {
                         missionId: (BotReference.MissionList.length + 1),
                         missionName: GivenCommand.args[1]
-                    },
-                    givenGroups: []
+                    }
                 });
+
                 break;
             }
 
             case ("dm"): { //delete mission:        eventId missionId?
                 a_Message.channel.sendMessage( "*** Command \'Delete Mission\' called!  args: " + GivenCommand.args );
+
+                BotReference.fn_deleteMission({
+                    eventId: Number(GivenCommand.args[0]),
+                    missionId: Number(GivenCommand.args[1])
+                });
+
                 break;
             }
 
@@ -54,7 +67,7 @@ export default function HandleMessage (a_Message: Discord.Message): void {
             }
 
             case ("mds"): { //delete slot           eventId missionId GroupName SlotName
-                a_Message.channel.sendMessage( "*** Command \'Delete Slot\' called!  args: " + GivenCommand.args );
+                a_Message.channel.sendMessage( "*** Command \'Delete Slot\' called!  args: " + GivenCommand.args );;
                 break;
             }
 

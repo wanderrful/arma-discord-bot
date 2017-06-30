@@ -25,6 +25,10 @@ export interface MissionSlot {
 //*** Mission-related command Argument structs
 export interface ArgsCreateMission {
     eventId: number, 
-    givenData: MissionData, 
-    givenGroups: Array<MissionGroup>
+    givenData: MissionData
+}
+
+export interface ArgsDeleteMission {
+    eventId: number,
+    missionId: number
 }

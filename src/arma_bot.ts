@@ -6,7 +6,9 @@ import HandleMessage from "./utils/message_handler";
 
 
 export default class ArmaBot extends Discord.Client {  
-  public MissionList: Array<MissionModule.Mission>;
+
+  public static CommandPrefix: string = "~";
+  public MissionList: Array<MissionModule.Mission>; //TODO: assign initial value based on saved database or JSON file contents?
 
 
 
@@ -34,18 +36,22 @@ export default class ArmaBot extends Discord.Client {
 
 
   //*** Adds the new mission to the sv_MissionList array and returns a reference to the new mission
-  createMission( a: MissionModule.ArgsCreateMission ) : MissionModule.Mission {
-      let NewMission: MissionModule.Mission = {
-          eventId: a.eventId,
-          data: a.givenData,
-          groups: a.givenGroups
-      };
-      this.MissionList.concat(NewMission);
-      return NewMission;
+  fn_createMission( args: MissionModule.ArgsCreateMission ) : MissionModule.Mission {
+    let NewMission: MissionModule.Mission = {
+        eventId: args.eventId,
+        data: args.givenData,
+        groups: []
+    };
+    this.MissionList.concat(NewMission);
+    return NewMission;
   }
 
   //*** Deletes a mission from the cache based on the given Mission struct
-  deleteMission( a_Mission: MissionModule.Mission ): void {}
+  fn_deleteMission( args: MissionModule.ArgsDeleteMission ): void {
+    //search for a Mission struct contained this.MissionList matching the given arguments
+    //if one is found: remove it from this.MissionList and report the details
+    //if none is found: report the failure to locate a mission matching the given parameters
+  }
 
-  createMissionSlot(  ): void {}
+  fn_createMissionSlot(  ): void {}
 };
