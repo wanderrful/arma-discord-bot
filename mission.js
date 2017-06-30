@@ -8,7 +8,7 @@ class Mission {
 
   //*** Create a new mission
   static fn_CreateMission( a_MissionName ) {
-    command = "CREATE TABLE IF NOT EXISTS " +  a_MissionName " ( " +
+    command = "CREATE TABLE IF NOT EXISTS " +  a_MissionName + " ( " +
     "GroupName CHAR(40), " +
     "SlotName CHAR(40), " +
     "UserName CHAR(40) " +
