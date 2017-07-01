@@ -1,13 +1,8 @@
 //*** Used as a reference for all mission events
 export interface Mission {
     eventId: number,
-    data: MissionData,
+    missionName: string,
     groups: Array<MissionGroup>
-}
-
-export interface MissionData {
-    missionId: number,
-    missionName: string
 }
 
 export interface MissionGroup {
@@ -17,18 +12,19 @@ export interface MissionGroup {
 
 export interface MissionSlot {
     slotName: string,
-    user: number //reference to the client (is it a number?)
+    user: string //unique id reference to the client (is it a number?)
 }
 
 
 
 //*** Mission-related command Argument structs
-export interface ArgsCreateMission {
-    eventId: number, 
-    givenData: MissionData
+export interface ArgsManageMission {
+    eventId: number,
+    missionName: string
 }
 
-export interface ArgsDeleteMission {
+export interface ArgsManageMissionSlot {
     eventId: number,
-    missionId: number
+    groupName: string,
+    slotName: string
 }

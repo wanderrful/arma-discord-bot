@@ -3,7 +3,7 @@
     "compilerOptions": {
         "target": "es6",
         "outDir": "../build",
-        "sourceMap": false,
+        "sourceMap": true,
         "watch": true,
         "module": "commonjs",
         "noImplicitReturns": true
