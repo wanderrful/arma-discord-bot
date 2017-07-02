@@ -2,3 +2,5 @@ node_modules/
 _scratch/
 build/
 .vscode/
+
+src/bot_key.ts

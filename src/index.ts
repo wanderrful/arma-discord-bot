@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 
 import ArmaBot from "./arma_bot";
+import BotKey from "./bot_key"; //purposefully gitignored:  this file only exports the login key code for the bot
 
 
 
@@ -10,4 +11,4 @@ let Bot = new ArmaBot();
 
 
 //*** Login to Discord and begin running the bot
-Bot.login("Mjk2OTMzMTUzMDE5Mzk2MDk3.C75hLg.CtRd87FwV8tZZ8Jytu5T5VtpPAg");
+Bot.login(BotKey);
