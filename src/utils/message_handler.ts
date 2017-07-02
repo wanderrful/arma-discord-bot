@@ -19,6 +19,7 @@ export default function HandleMessage (a_Message: Discord.Message): void {
     
     let bIsCommand: boolean = a_Message.content.startsWith(CommandPrefix);
     let bIsDirectMessage: boolean = a_Message.channel instanceof Discord.DMChannel;
+    let bIsAdmin: boolean = a_Message.member.roles.exists("name", "guy");
 
     if (bIsCommand && !bIsDirectMessage) {
         //parse the message for commands
@@ -35,66 +36,74 @@ export default function HandleMessage (a_Message: Discord.Message): void {
 
             //*** MISSION COMMANDS
             case ("cm"): { //create mission:        eventId missionName
-                a_Message.channel.send( "Command \'Create Mission\' called!  args: " + GivenCommand.args );
+                if (bIsAdmin) {
+                    a_Message.channel.send( "Command \'Create Mission\' called!  args: " + GivenCommand.args );
 
-                let noErrors: boolean = BotReference.fn_createMission({
-                    eventId: Number(GivenCommand.args[0]),
-                    missionName: GivenCommand.args[1]
-                });
-                if (noErrors) {
-                    a_Message.channel.send("Mission creation successful!");
-                } else {
-                    a_Message.channel.send("ERROR: mission creation failed somehow!");
+                    let noErrors: boolean = BotReference.fn_createMission({
+                        eventId: Number(GivenCommand.args[0]),
+                        missionName: GivenCommand.args[1]
+                    });
+                    if (noErrors) {
+                        a_Message.channel.send("Mission creation successful!");
+                    } else {
+                        a_Message.channel.send("ERROR: mission creation failed somehow!");
+                    }
                 }
 
                 break;
             }
 
             case ("dm"): { //delete mission:        eventId missionName
-                a_Message.channel.send( "Command \'Delete Mission\' called!  args: " + GivenCommand.args );
+                if (bIsAdmin) {
+                    a_Message.channel.send( "Command \'Delete Mission\' called!  args: " + GivenCommand.args );
 
-                let noErrors: boolean = BotReference.fn_deleteMission({
-                    eventId: Number(GivenCommand.args[0]),
-                    missionName: GivenCommand.args[1]
-                });
-                if (noErrors) {
-                    a_Message.channel.send("Mission deletion was successful!");
-                } else {
-                    a_Message.channel.send("ERROR: given mission was not found in the MissionList!");
+                    let noErrors: boolean = BotReference.fn_deleteMission({
+                        eventId: Number(GivenCommand.args[0]),
+                        missionName: GivenCommand.args[1]
+                    });
+                    if (noErrors) {
+                        a_Message.channel.send("Mission deletion was successful!");
+                    } else {
+                        a_Message.channel.send("ERROR: given mission was not found in the MissionList!");
+                    }
                 }
 
                 break;
             }
 
             case ("mas"): { //add slot:             eventId GroupName SlotName
-                a_Message.channel.send( "Command \'Add Slot\' called!  args: " + GivenCommand.args );
+                if (bIsAdmin) {
+                    a_Message.channel.send( "Command \'Add Slot\' called!  args: " + GivenCommand.args );
 
-                let noErrors: boolean = BotReference.fn_addMissionSlot({
-                    eventId: Number(GivenCommand.args[0]),
-                    groupName: GivenCommand.args[1],
-                    slotName: GivenCommand.args[2]
-                });
-                if (noErrors) {
-                    a_Message.channel.send("Slot addition was successful!");
-                } else {
-                    a_Message.channel.send("Slot addition failed!  Was the eventId valid?");
+                    let noErrors: boolean = BotReference.fn_addMissionSlot({
+                        eventId: Number(GivenCommand.args[0]),
+                        groupName: GivenCommand.args[1],
+                        slotName: GivenCommand.args[2]
+                    });
+                    if (noErrors) {
+                        a_Message.channel.send("Slot addition was successful!");
+                    } else {
+                        a_Message.channel.send("Slot addition failed!  Was the eventId valid?");
+                    }
                 }
 
                 break;
             }
 
             case ("mds"): { //delete slot           eventId GroupName SlotName
-                a_Message.channel.send( "Command \'Delete Slot\' called!  args: " + GivenCommand.args );
+                if (bIsAdmin) {
+                    a_Message.channel.send( "Command \'Delete Slot\' called!  args: " + GivenCommand.args );
 
-                let noErrors: boolean = BotReference.fn_removeMissionSlot({
-                    eventId: Number(GivenCommand.args[0]),
-                    groupName: GivenCommand.args[1],
-                    slotName: GivenCommand.args[2]
-                });
-                if (noErrors) {
-                    a_Message.channel.send("Slot deletion was successful!");
-                } else {
-                    a_Message.channel.send("Slot addition failed!  Were the arguments all valid?");
+                    let noErrors: boolean = BotReference.fn_removeMissionSlot({
+                        eventId: Number(GivenCommand.args[0]),
+                        groupName: GivenCommand.args[1],
+                        slotName: GivenCommand.args[2]
+                    });
+                    if (noErrors) {
+                        a_Message.channel.send("Slot deletion was successful!");
+                    } else {
+                        a_Message.channel.send("Slot addition failed!  Were the arguments all valid?");
+                    }
                 }
 
                 break;
@@ -111,7 +120,7 @@ export default function HandleMessage (a_Message: Discord.Message): void {
                     groupName: GivenCommand.args[1],
                     slotName: GivenCommand.args[2]
                 },
-                    a_Message.author.username
+                    a_Message.member.nickname
                 );
                 if (noErrors) {
                     a_Message.channel.send("Slot has been reserved successfully!");
@@ -135,21 +144,19 @@ export default function HandleMessage (a_Message: Discord.Message): void {
                 break;
             }
 
-            case ("check"): { //check reservation
-                a_Message.channel.send( "*** Command \'Check Slot Reservation\' called!  args: " + GivenCommand.args );
-                break;
-            }
-
 
 
             //*** DEBUG COMMANDS
-            case ("list"): {
+            case ("list"): { //check mission roster eventId
                 //TODO: if an event id is given as an argument, only show that mission's JSON data!
+                //TODO: make the actual output look a lot more organized than just raw JSON.
+                let Parameter: any = BotReference.MissionList;
+                if ( !(GivenCommand.args[0] in ["all", "", null]) ) { 
+                    Parameter = BotReference.MissionList[ BotReference.fn_utility_getMissionIndex(Number(GivenCommand.args[0])) ];
+                }
                 a_Message.channel.send( 
-                    "MissionList.length: " + BotReference.MissionList.length + "\n" +
-                    "MissionList=" + "\n" +
-                    "```json\n" +
-                    JSON.stringify(BotReference.MissionList, null, 2) +
+                    "```\n" +
+                    BotReference.fn_utility_formatJSON( JSON.stringify(Parameter, null, 1) ) +
                     "\n```"
                 );
 

@@ -6,7 +6,8 @@
         "sourceMap": true,
         "watch": true,
         "module": "commonjs",
-        "noImplicitReturns": true
+        "noImplicitReturns": true,
+        "removeComments": true
     },
     "exclude": [
         "_scratch/",
