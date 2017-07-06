@@ -175,17 +175,20 @@ export default class ArmaBot extends Discord.Client {
     });
     return indexOfMission;
   }
-  fn_utility_getGroupIndex( a_GroupList: Array<MissionModule.MissionGroup>, a_SearchTerm: string): number {
+  fn_utility_getGroupIndex( a_GroupList: Array<MissionModule.MissionGroup>, a_SearchTerm: string ): number {
     let indexOfGroup: number = a_GroupList.findIndex( (element: MissionModule.MissionGroup) => {
       return element.groupName.toLowerCase() === a_SearchTerm.toLowerCase();
     });
     return indexOfGroup;
   }
-  fn_utility_getSlotIndex( a_SlotList: Array<MissionModule.MissionSlot>, a_SearchTerm: string): number {
+  fn_utility_getSlotIndex( a_SlotList: Array<MissionModule.MissionSlot>, a_SearchTerm: string ): number {
     let indexOfSlot: number = a_SlotList.findIndex( (element: MissionModule.MissionSlot) => {
       return element.slotName.toLowerCase() === a_SearchTerm.toLowerCase();
     });
     return indexOfSlot;
+  }
+  fn_utility_formatJSON( a_JSONData: string ): string {
+    return a_JSONData.replace(/[\[\]{},\"]/g, "");
   }
 
 };
