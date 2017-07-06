@@ -102,13 +102,13 @@ class ArmaBot extends Discord.Client {
         }
         return false;
     }
-    fn_cancelReservation(a_eventId, a_User) {
+    fn_cancelReservation(a_eventId, a_NickName) {
         let MissionIndex = this.fn_utility_getMissionIndex(a_eventId);
         if (MissionIndex > -1) {
             let bIsGroupListEmpty = this.MissionList[MissionIndex].groups.length == 0;
             for (let grp of this.MissionList[MissionIndex].groups) {
                 for (let slot of grp.slots) {
-                    if (slot.user === a_User.username) {
+                    if (slot.user === a_NickName) {
                         slot.user = "";
                         return true;
                     }
@@ -137,6 +137,12 @@ class ArmaBot extends Discord.Client {
     }
     fn_utility_formatJSON(a_JSONData) {
         return a_JSONData.replace(/[\[\]{},\"]/g, "");
+    }
+    fn_database_save() {
+        throw "Not yet implemented!";
+    }
+    fn_database_update() {
+        throw "Not yet implemented!";
     }
 }
 exports.default = ArmaBot;

@@ -134,7 +134,7 @@ export default function HandleMessage (a_Message: Discord.Message): void {
             case ("cancel"): { //cancel reservation eventId
                 a_Message.channel.send( "*** Command \'Cancel Slot Reservation\' called!  args: " + GivenCommand.args );
 
-                let noErrors: boolean = BotReference.fn_cancelReservation( Number(GivenCommand.args[0]), a_Message.author );
+                let noErrors: boolean = BotReference.fn_cancelReservation( Number(GivenCommand.args[0]), a_Message.member.nickname );
                 if (noErrors) {
                     a_Message.channel.send("Slot reservation has been cancelled successfully!");
                 } else {
@@ -171,8 +171,10 @@ export default function HandleMessage (a_Message: Discord.Message): void {
             }
 
             case ("shutdown"): {  //disconnect and shut down
-                a_Message.channel.send("Shutdown command acknowledged.  Shutting down.");
-                BotReference.destroy();
+                if (bIsAdmin) {
+                    a_Message.channel.send("Shutdown command acknowledged.  Shutting down.");
+                    BotReference.destroy();
+                }
             }
             
 

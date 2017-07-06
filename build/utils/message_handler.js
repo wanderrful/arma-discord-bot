@@ -97,7 +97,7 @@ function HandleMessage(a_Message) {
             }
             case ("cancel"): {
                 a_Message.channel.send("*** Command \'Cancel Slot Reservation\' called!  args: " + GivenCommand.args);
-                let noErrors = BotReference.fn_cancelReservation(Number(GivenCommand.args[0]), a_Message.author);
+                let noErrors = BotReference.fn_cancelReservation(Number(GivenCommand.args[0]), a_Message.member.nickname);
                 if (noErrors) {
                     a_Message.channel.send("Slot reservation has been cancelled successfully!");
                 }
@@ -126,8 +126,10 @@ function HandleMessage(a_Message) {
                 break;
             }
             case ("shutdown"): {
-                a_Message.channel.send("Shutdown command acknowledged.  Shutting down.");
-                BotReference.destroy();
+                if (bIsAdmin) {
+                    a_Message.channel.send("Shutdown command acknowledged.  Shutting down.");
+                    BotReference.destroy();
+                }
             }
             default: {
                 a_Message.channel.send("ERROR! invalid command: " + JSON.stringify(GivenCommand, null, 2));
