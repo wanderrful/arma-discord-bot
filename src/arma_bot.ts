@@ -24,7 +24,7 @@ export default class ArmaBot extends Discord.Client {
     this.on('disconnect', () => {
       /*
        * TODO:
-       * save the MissionList to a database or a json file or something 
+       * - save the MissionList to a database or a json file or something 
        * so that we can read from it again upon the next startup and have persistent data!
        */
       console.warn('*** Disconnected!'); 
@@ -32,6 +32,11 @@ export default class ArmaBot extends Discord.Client {
     this.on('reconnecting', () => { console.warn('*** Reconnecting...'); });
 
     this.on('ready', () => {
+      /*
+       * TODO:
+       * - read from the database or storage file
+       * - parse that database or storage file into the MissionList format we need!
+       */ 
       console.log(`Client ready; logged in as ${this.user.username}#${this.user.discriminator} (${this.user.id})`);
     });
 
