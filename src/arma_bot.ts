@@ -3,6 +3,8 @@ import * as Discord from "discord.js";
 import * as MissionModule from "./utils/mission";
 import HandleMessage from "./utils/message_handler";
 
+import * as pg from "pg";  // Database stuff
+
 
 
 export default class ArmaBot extends Discord.Client {  
@@ -24,7 +26,7 @@ export default class ArmaBot extends Discord.Client {
     this.on('disconnect', () => {
       /*
        * TODO:
-       * save the MissionList to a database or a json file or something 
+       * - save the MissionList to a database or a json file or something 
        * so that we can read from it again upon the next startup and have persistent data!
        */
       console.warn('*** Disconnected!'); 
@@ -32,6 +34,11 @@ export default class ArmaBot extends Discord.Client {
     this.on('reconnecting', () => { console.warn('*** Reconnecting...'); });
 
     this.on('ready', () => {
+      /*
+       * TODO:
+       * - read from the database or storage file
+       * - parse that database or storage file into the MissionList format we need!
+       */ 
       console.log(`Client ready; logged in as ${this.user.username}#${this.user.discriminator} (${this.user.id})`);
     });
 
@@ -148,14 +155,14 @@ export default class ArmaBot extends Discord.Client {
   }
 
   //*** Cancels a reserved mission slot for the user!
-  fn_cancelReservation( a_eventId: number, a_User: Discord.User) {
+  fn_cancelReservation( a_eventId: number, a_NickName: string) {
     let MissionIndex: number = this.fn_utility_getMissionIndex( a_eventId );
     if (MissionIndex > -1) {
       //mission has been found!  now we verify that the given group exists.
       let bIsGroupListEmpty: boolean = this.MissionList[MissionIndex].groups.length == 0;
       for (let grp of this.MissionList[MissionIndex].groups) {
         for (let slot of grp.slots) {
-          if (slot.user === a_User.username) {
+          if (slot.user === a_NickName) {
             //TODO: instead of checking for the raw username string, I should modify the "user" field to be a struct of both username AND unique discord user id.
             slot.user = "";
             return true;
@@ -189,6 +196,16 @@ export default class ArmaBot extends Discord.Client {
   }
   fn_utility_formatJSON( a_JSONData: string ): string {
     return a_JSONData.replace(/[\[\]{},\"]/g, "");
+  }
+
+
+
+  //*** Database functions
+  fn_database_save() {
+    throw "Not yet implemented!";
+  }
+  fn_database_update() {
+    throw "Not yet implemented!";
   }
 
 };
