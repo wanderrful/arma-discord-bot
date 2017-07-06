@@ -5,8 +5,10 @@ import BotKey from "./bot_key"; //purposefully gitignored:  this file only expor
 
 
 
-//*** Initialize the bot itself
-let Bot = new ArmaBot();
+export default function() {
+    //*** Initialize the bot itself
+    let Bot = new ArmaBot();
 
-//*** Login to Discord and begin running the bot
-Bot.login(BotKey);
+    //*** Login to Discord and begin running the bot
+    Bot.login(BotKey);
+}
