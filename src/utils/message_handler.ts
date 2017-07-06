@@ -151,14 +151,21 @@ export default function HandleMessage (a_Message: Discord.Message): void {
                 //TODO: if an event id is given as an argument, only show that mission's JSON data!
                 //TODO: make the actual output look a lot more organized than just raw JSON.
                 let Parameter: any = BotReference.MissionList;
-                if ( !(GivenCommand.args[0] in ["all", "", null]) ) { 
-                    Parameter = BotReference.MissionList[ BotReference.fn_utility_getMissionIndex(Number(GivenCommand.args[0])) ];
+                if ( !isNaN(Number(GivenCommand.args[0])) ) { 
+                    let MissionIndex: number =  BotReference.fn_utility_getMissionIndex(Number(GivenCommand.args[0]));
+                    if (MissionIndex > -1) {
+                        Parameter = BotReference.MissionList[ MissionIndex ];
+                        a_Message.channel.send( 
+                            "```\n" +
+                            BotReference.fn_utility_formatJSON( JSON.stringify(Parameter, null, 1) ) +
+                            "\n```"
+                        );
+                    } else {
+                        a_Message.channel.send("ERROR:  mission ID not found!");
+                    }
+                } else {
+                    a_Message.channel.send("Invalid argument!  Syntax: ';list IDNUMBER'");
                 }
-                a_Message.channel.send( 
-                    "```\n" +
-                    BotReference.fn_utility_formatJSON( JSON.stringify(Parameter, null, 1) ) +
-                    "\n```"
-                );
 
                 break;
             }
