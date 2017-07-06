@@ -7,8 +7,8 @@ import * as MissionModule from "./mission";
 
 
 interface Command {
-    cmd: string,
-    args: Array<string>
+    cmd: string;
+    args: Array<string>;
 }
 
 
