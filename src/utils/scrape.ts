@@ -29,7 +29,7 @@ function fn_getGroupData(config: Config): void {
     });
 }
 
-// Returns an object timestamp.  Modified from a Gist I found online and convered to TypeScript by me.
+// Returns a timestamp as an object.
 function fn_getTimeStamp(): Object {
     let now: Date = new Date();
     let date: Array<String> = [ String(now.getMonth() + 1), String(now.getDate()), String(now.getFullYear()) ];
@@ -49,8 +49,19 @@ function fn_getTimeStamp(): Object {
 
 
 
+// PostgreSQL queries
+const db_initQuery: string = `
+CREATE TABLE IF NOT EXISTS db_membercounts(
+    timestamp text not null primary key, count numeric not null, ingame numeric not null, online numeric not null
+)`;
+const db_insertQuery: string = `
+INSERT INTO db_membercounts 
+VALUES(
+    $1
+)`;
+
 // PostgreSQL functions
-function fn_connectToPG(): pg.Client {
+function fn_connectToDB(): pg.Client {
     const client = new pg.Client();
 
     client.connect((err) => {
@@ -58,6 +69,9 @@ function fn_connectToPG(): pg.Client {
             console.error("*** DB CONNECTION ERROR: ", err.stack);
         } else {
             console.log("*** DB CONNECTION SUCCESSFUL!");
+            fn_query(client, db_initQuery, ()=>{
+
+            });
         }
     });
     client.on("error", (err) => {
@@ -66,15 +80,18 @@ function fn_connectToPG(): pg.Client {
 
     return client;
 }
-
-function fn_query(client: pg.Client, query: Object, ) {
-    client.query((err) => {
+function fn_query(client: pg.Client, query: Object|string, func: (args?: any) => any ): void {
+    client.query(query, (err, res) => {
         if (err) {
             console.error("*** DB ERROR: ", err.stack);
         } else {
-            console.log();
+            console.log(res.rows);
+            func(res);
         }
     });
+}
+function fn_insert(client: pg.Client, query: Object|string, func:(args?: any) => any): void {
+    fn_query(client, query, func());
 }
 
 
@@ -92,7 +109,7 @@ export function fn_run(): void {
     };
 
     // Connect to the Database
-    const client = fn_connectToPG();
+    const client = fn_connectToDB();
 
     // Finally, begin the looping scrape for data
     setInterval( () => {
