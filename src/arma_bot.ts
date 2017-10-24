@@ -1,9 +1,8 @@
 import * as Discord from "discord.js";
+import * as pg from "pg";  // Database stuff
 
 import * as MissionModule from "./utils/mission";
 import HandleMessage from "./utils/message_handler";
-
-import * as pg from "pg";  // Database stuff
 
 
 

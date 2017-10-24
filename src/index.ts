@@ -1,5 +1,4 @@
 //environment variables defined by the heroku app
-import * as Discord from "discord.js";
 import ArmaBot from "./arma_bot";
 
 
